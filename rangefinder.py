@@ -72,12 +72,18 @@ class rangefinder(object):
         logging.basicConfig(filename = logname, 
                             format='%(levelname)s:%(message)s', 
                             level=logging.DEBUG)
-        print "Logging data to file %s. \"Ctrl-c Ctrl-c\" to stop" % (logname,)
+        print "Logging data to file %s. \"Ctrl-c\" to stop" % (logname,)
         
         #Start recording:
         self.status = 1
         while self.status:
-            received_line = self.get_message()
+            try: 
+                received_line = self.get_message()
+            except (KeyboardInterrupt, SystemExit):
+                raise
+            except e:
+                exception = e
+                logging.exception("type: %s" % exception)
             range, status = self.interpret(received_line)
             clock = time.strftime("%X")
             output = ("time: " + clock + ", distance: " + range 
