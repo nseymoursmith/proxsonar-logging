@@ -1,13 +1,16 @@
+#!/usr/bin/env python
+
 """
 Python serial interface to USB-ProxSonar
 logs data from the rangefinder to file
 N. Seymour-Smith 11/09/14
 """
-
+import sys
 import serial
 import glob
 import time
 import logging
+import settings
 
 class rangefinder(object):
     #default port def should work for linux & mac
@@ -18,7 +21,7 @@ class rangefinder(object):
         clock = "".join(time.strftime("%X").split(":"))
         logname = "rangefinderlog_%s_%s.log" % (date, clock)
         logging.basicConfig(filename = logname, 
-                            format='%(levelname)s:%(message)s', 
+                            format='%(message)s', 
                             level=logging.DEBUG)
         print "Logging data to file %s. \"Ctrl-c\" to stop" % (logname,)
 
@@ -35,10 +38,13 @@ class rangefinder(object):
             logging.exception("Error opening serial port for rangefinder:\
                               %s" % (port,))
             raise
-        logging.info("Serial initialised to port: %s \n" % (port,))
-        print "Serial initialised to port: %s \n" % (port,)
+        logging.info("Serial initialised to port: %s \n\
+                      Threshold set to: %s inches" % (port,settings.THRESHOLD))
+        print "Serial initialised to port: %s \n\
+               Threshold set to: %s inches" % (port,settings.THRESHOLD)
 
     def get_message(self, timeout = 10): #timeout in seconds
+        self.serial.flushInput()
         start_time = time.time()
         while not self.serial.inWaiting(): #wait for message from rangefinder
             time.sleep(0.1)
@@ -62,21 +68,22 @@ class rangefinder(object):
     def stop(self):
         self.status = 0
 
-    def record(self, silent = False): 
+    def record(self):
         #Start recording:
         self.status = 1
-        start = round(time.time(),0)
+        start = round(time.time(), 0)
         while self.status:
             try: 
-                received_line = self.get_message()[:-1]
-                now = round(time.time(),0)
-#                if now != start: #record the time every second
-                logging.info(received_line)
-#                range, status = self.interpret(received_line)
-#                clock = time.strftime("%X")
-#                output = ("T" + clock + " " + received_line)
-#                if not silent:
-#                    print received_line
+                now = round(time.time(), 0)
+                if now != start:
+                    received_line = self.get_message()[:-1]
+                    temp = received_line.split(" ")
+                    distance = int(temp[0][1:])
+                    if distance > settings.THRESHOLD:
+                        logging.info(received_line)
+                    if not settings.SILENT:
+                        print received_line + "\n"
+                    start = now
             except (KeyboardInterrupt, SystemExit):
                 raise
             except:
