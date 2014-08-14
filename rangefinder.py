@@ -10,8 +10,6 @@ import time
 import logging
 import settings
 
-port = "/dev/tty*USB*" #Should work for Mac/linux if only serial device
-
 class rangefinder(object):
     #default port def should work for linux & mac
     def __init__(self):
@@ -37,7 +35,7 @@ class rangefinder(object):
         else:
             #Look for the first port that matches the glob given
             try:
-                port = glob.glob(port)[0]
+                port = glob.glob(settings.PORT)[0]
             except IndexError:
                 logging.error("Could not find the serial port for the rangefinder:\
                          %s" % (port,))
@@ -49,9 +47,11 @@ class rangefinder(object):
                               %s" % (port,))
                 raise
         logging.info("Serial initialised to port: %s \n\
-                      Threshold set to: %s inches" % (port,settings.THRESHOLD))
-        print "Serial initialised to port: %s \n\
-               Threshold set to: %s inches" % (port,settings.THRESHOLD)
+Threshold set to: %s inches\nSample taken every %s seconds\n" % 
+                     (port,settings.THRESHOLD,settings.RATE))
+        print ("Serial initialised to port: %s \n\
+Threshold set to: %s inches\nSample taken every %s seconds\n" % 
+        (port,settings.THRESHOLD,settings.RATE))
 
     def get_message(self, timeout = 10): #timeout in seconds
         self.serial.flushInput()
@@ -84,17 +84,14 @@ class rangefinder(object):
         start = round(time.time(), 0)
         while self.status:
             try: 
-                now = round(time.time(), 0)
-                if now != start:
-                    received_line = self.get_message()[:-1] #strip \cr
-                    temp = received_line.split(" ")
-                    distance = int(temp[0][1:])
-                    if distance > settings.THRESHOLD:
-                        logging.info(received_line)
-                    if not settings.SILENT:
-                        print received_line + "\n"
-                    start = now
-                time.sleep(0.1)
+                received_line = self.get_message()[:-1] #strip \cr
+                temp = received_line.split(" ")
+                distance = int(temp[0][1:])
+                if distance > settings.THRESHOLD:
+                    logging.info(received_line)
+                if not settings.SILENT:
+                    print received_line + "\n"
+                time.sleep(settings.RATE)
             except (KeyboardInterrupt, SystemExit):
                 raise
             except:
