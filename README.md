@@ -11,8 +11,11 @@ To quit, press "Ctrl-c" in the terminal
 REQUIREMENTS:
 
 1. Python2.7: 
+
 a. Windows: https://www.python.org/download/releases/2.7/
+
 b. Mac (if Python is not already installed): 
+	
  i. Install homebrew (instructions from http://brew.sh/):
    - Got to Terminal and type `ruby -e "$(curl -fsSL
      https://raw.github.com/Homebrew/homebrew/go/install)"`
@@ -26,11 +29,15 @@ b. Mac (if Python is not already installed):
      then `source ~/.bash_profile`
 
 pySerial: 
+
 Windows: http://www.askives.com/pyserial-64-bit-windows.html
+
 Mac: 
 > pip install pyserial
 
 MySQLdb: 
+
 Windows: http://www.codegood.com/archives/129
+
 > pip install MySQLdb-python
 
