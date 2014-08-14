@@ -10,13 +10,13 @@ To quit, press "Ctrl-c" in the terminal
 
 REQUIREMENTS:
 
-1. Python2.7: 
+Python2.7: 
 
-a. Windows: https://www.python.org/download/releases/2.7/
+Windows: https://www.python.org/download/releases/2.7/
 
-b. Mac (if Python is not already installed): 
+Mac (if Python is not already installed): 
 	
- i. Install homebrew (instructions from http://brew.sh/):
++ Install homebrew (instructions from http://brew.sh/):
    - Got to Terminal and type `ruby -e "$(curl -fsSL
      https://raw.github.com/Homebrew/homebrew/go/install)"`
    - Hit return when prompted
