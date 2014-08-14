@@ -3,6 +3,7 @@ Python serial interface to USB-ProxSonar
 logs data from the rangefinder to file
 N. Seymour-Smith 11/09/14
 """
+
 import sys
 import serial
 import glob
@@ -106,11 +107,14 @@ Threshold set to: %s inches\nSample taken every %s seconds\nPress \"Ctrl-c\" to 
                 activeValue = int(temp[1][1:])
                 if distance > settings.DMAX:
                     activeValue = 0
+                else:
+                    activeValue = 1
                 logging.info(received_line)
                 self.cur.execute(self.sqlUpdate, (activeValue, settings.COLUMN_ID))
                 if not settings.SILENT:
-                    print "activeValue on database: ", (dbValue[0],)
-                    print "sensor data: " + received_line + "\n"
+                    print "\nsensor data: " + received_line 
+                    print "Max distance: %s in." % (settings.DMAX,)
+                    print "activeValue on database: %s" % (dbValue[0],)
                 
                 time.sleep(settings.RATE)
             except ValueError:

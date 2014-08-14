@@ -2,7 +2,7 @@
 
 DMAX = 12 #maximum distance for recognition
 
-RATE = 1 #Seconds between readings
+RATE = 0.5 #Seconds between readings
 
 SILENT = 0 #If set, readings will not be printed to terminal
 
