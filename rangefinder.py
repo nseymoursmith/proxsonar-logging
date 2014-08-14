@@ -8,7 +8,10 @@ import serial
 import glob
 import time
 import logging
+<<<<<<< HEAD
 import MySQLdb
+=======
+>>>>>>> 1a0db0850b107cc561adc2460424b37ac7a29cbb
 import settings
 
 class rangefinder(object):
@@ -16,6 +19,7 @@ class rangefinder(object):
     def __init__(self):
         self.debug = False
         self.status = 0;
+<<<<<<< HEAD
 
         #DB initialisation
         self.db = MySQLdb.connect(
@@ -50,6 +54,18 @@ class rangefinder(object):
                                 level=logging.DEBUG)
             print "Logging data to file %s." % (logname,)
 
+=======
+
+        #Logging initialisation:
+        date = "".join(time.strftime("%x").split("/"))
+        clock = "".join(time.strftime("%X").split(":"))
+        logname = "rangefinderlog_%s_%s.log" % (date, clock)
+        logging.basicConfig(filename = logname, 
+                            format='%(levelname)s:%(message)s', 
+                            level=logging.DEBUG)
+        print "Logging data to file %s. \"Ctrl-c\" to stop" % (logname,)
+
+>>>>>>> 1a0db0850b107cc561adc2460424b37ac7a29cbb
         #Open serial port:
         if settings.WINDOWS:
             port = settings.WINPORT
@@ -71,12 +87,20 @@ class rangefinder(object):
                 logging.exception("Error opening serial port for rangefinder:\
                               %s" % (port,))
                 raise
+<<<<<<< HEAD
         if settings.LOG:
             logging.info("Serial initialised to port: %s \n\
 Threshold set to: %s inches\nSample taken every %s seconds\n" % 
                      (port,settings.THRESHOLD,settings.RATE))
         print ("Serial initialised to port: %s \n\
 Threshold set to: %s inches\nSample taken every %s seconds\nPress \"Ctrl-c\" to quit" % 
+=======
+        logging.info("Serial initialised to port: %s \n\
+Threshold set to: %s inches\nSample taken every %s seconds\n" % 
+                     (port,settings.THRESHOLD,settings.RATE))
+        print ("Serial initialised to port: %s \n\
+Threshold set to: %s inches\nSample taken every %s seconds\n" % 
+>>>>>>> 1a0db0850b107cc561adc2460424b37ac7a29cbb
         (port,settings.THRESHOLD,settings.RATE))
 
     def get_message(self, timeout = 10): #timeout in seconds
@@ -98,6 +122,7 @@ Threshold set to: %s inches\nSample taken every %s seconds\nPress \"Ctrl-c\" to 
     def record(self):
         #Start recording:
         self.status = 1
+<<<<<<< HEAD
         while self.status:
             try: 
                 self.cur.execute(self.sqlRead, (settings.COLUMN_ID,))
@@ -117,6 +142,18 @@ Threshold set to: %s inches\nSample taken every %s seconds\nPress \"Ctrl-c\" to 
                 if not settings.SILENT:
                     print "activeValue on database: ", (dbValue[0],)
                     print "sensor data: " + received_line + "\n"
+=======
+        start = round(time.time(), 0)
+        while self.status:
+            try: 
+                received_line = self.get_message()[:-1] #strip \cr
+                temp = received_line.split(" ")
+                distance = int(temp[0][1:])
+                if distance > settings.THRESHOLD:
+                    logging.info(received_line)
+                if not settings.SILENT:
+                    print received_line + "\n"
+>>>>>>> 1a0db0850b107cc561adc2460424b37ac7a29cbb
                 time.sleep(settings.RATE)
             except (KeyboardInterrupt, SystemExit):
                 self.cur.close()
