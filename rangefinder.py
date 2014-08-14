@@ -10,8 +10,6 @@ import time
 import logging
 import settings
 
-port = "/dev/tty*USB*" #Should work for Mac/linux if only serial device
-
 class rangefinder(object):
     #default port def should work for linux & mac
     def __init__(self):
@@ -37,7 +35,7 @@ class rangefinder(object):
         else:
             #Look for the first port that matches the glob given
             try:
-                port = glob.glob(port)[0]
+                port = glob.glob(settings.PORT)[0]
             except IndexError:
                 logging.error("Could not find the serial port for the rangefinder:\
                          %s" % (port,))
