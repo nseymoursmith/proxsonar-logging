@@ -76,7 +76,7 @@ class rangefinder(object):
             try: 
                 now = round(time.time(), 0)
                 if now != start:
-                    received_line = self.get_message()[:-1]
+                    received_line = self.get_message()[:-1] #strip \cr
                     temp = received_line.split(" ")
                     distance = int(temp[0][1:])
                     if distance > settings.THRESHOLD:
@@ -84,6 +84,7 @@ class rangefinder(object):
                     if not settings.SILENT:
                         print received_line + "\n"
                     start = now
+                time.sleep(0.1)
             except (KeyboardInterrupt, SystemExit):
                 raise
             except:
