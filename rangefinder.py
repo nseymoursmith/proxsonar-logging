@@ -104,7 +104,12 @@ Threshold set to: %s inches\nSample taken every %s seconds\nPress \"Ctrl-c\" to 
                 dbValue = self.cur.fetchone()
                 received_line = self.get_message()[:-1] #strip \cr
                 temp = received_line.split(" ")
-                distance = int(temp[0][1:])
+                try:
+                    distance = int(temp[0][1:])
+                except ValueError:
+                    if not settings.SILENT:
+                        print "Serial error, skipping measurement"
+                    pass
                 activeValue = int(temp[1][1:])
                 if distance > settings.THRESHOLD:
                     logging.info(received_line)
