@@ -9,11 +9,17 @@ import glob
 import time
 import logging
 
+WINDOWS = True
+winport = "COM1"
+port = "/dev/tty*USB*"
+
 class rangefinder(object):
     #default port def should work for linux & mac
-    def __init__(self, port="/dev/tty*USB*"):
+    def __init__(self):
         self.debug = False
         self.status = 0;
+
+        #Logging initialisation:
         date = "".join(time.strftime("%x").split("/"))
         clock = "".join(time.strftime("%X").split(":"))
         logname = "rangefinderlog_%s_%s.log" % (date, clock)
@@ -22,19 +28,27 @@ class rangefinder(object):
                             level=logging.DEBUG)
         print "Logging data to file %s. \"Ctrl-c\" to stop" % (logname,)
 
-        #Look for the first port that matches the glob given
-        try:
-            port = glob.glob(port)[0]
-        except IndexError:
-           logging.error("Could not find the serial port for the rangefinder:\
+        #Open serial port:
+        if WINDOWS:
+            port = winport
+            try:
+                self.serial = serial.Serial(port, 57600, timeout=None)
+            except:
+                logging.exception("Error opening serial port %s" % (port,))
+        else:
+            #Look for the first port that matches the glob given
+            try:
+                port = glob.glob(port)[0]
+            except IndexError:
+                logging.error("Could not find the serial port for the rangefinder:\
                          %s" % (port,))
-           raise Exception(port + "does not exist!")
-        try:
-            self.serial = serial.Serial(port, 57600, timeout=None)
-        except:
-            logging.exception("Error opening serial port for rangefinder:\
+                raise Exception(port + " does not exist!")
+            try:
+                self.serial = serial.Serial(port, 57600, timeout=None)
+            except:
+                logging.exception("Error opening serial port for rangefinder:\
                               %s" % (port,))
-            raise
+                raise
         logging.info("Serial initialised to port: %s \n" % (port,))
         print "Serial initialised to port: %s \n" % (port,)
 
