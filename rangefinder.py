@@ -73,9 +73,9 @@ class rangefinder(object):
         if settings.LOG:
             logging.info("Serial initialised to port: %s \n\
 Threshold set to: %s inches\nSample taken every %s seconds\n" % 
-                     (port,settings.THRESHOLD,settings.RATE))
+                     (port,settings.DMAX,settings.RATE))
         print ("Serial initialised to port: %s \n\
-Threshold set to: %s inches\nSample taken every %s seconds\nPress \"Ctrl-c\" to quit" % (port,settings.THRESHOLD,settings.RATE))
+Threshold set to: %s inches\nSample taken every %s seconds\nPress \"Ctrl-c\" to quit" % (port,settings.DMAX,settings.RATE))
 
     def get_message(self, timeout = 10): #timeout in seconds
         self.serial.flushInput()
@@ -104,9 +104,10 @@ Threshold set to: %s inches\nSample taken every %s seconds\nPress \"Ctrl-c\" to 
                 temp = received_line.split(" ")
                 distance = int(temp[0][1:])
                 activeValue = int(temp[1][1:])
-                if distance > settings.THRESHOLD:
-                    logging.info(received_line)
-                    self.cur.execute(self.sqlUpdate, (activeValue, settings.COLUMN_ID))
+                if distance > settings.DMAX:
+                    activeValue = 0
+                logging.info(received_line)
+                self.cur.execute(self.sqlUpdate, (activeValue, settings.COLUMN_ID))
                 if not settings.SILENT:
                     print "activeValue on database: ", (dbValue[0],)
                     print "sensor data: " + received_line + "\n"

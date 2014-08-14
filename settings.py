@@ -1,6 +1,6 @@
 # CONFIGURABLE VALUES:
 
-THRESHOLD = 10 #Minimum distance (inches) included in log 
+DMAX = 12 #maximum distance for recognition
 
 RATE = 1 #Seconds between readings
 
