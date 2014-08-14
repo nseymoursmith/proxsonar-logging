@@ -8,18 +8,13 @@ import serial
 import glob
 import time
 import logging
-<<<<<<< HEAD
 import MySQLdb
-=======
->>>>>>> 1a0db0850b107cc561adc2460424b37ac7a29cbb
 import settings
 
 class rangefinder(object):
-    #default port def should work for linux & mac
     def __init__(self):
         self.debug = False
         self.status = 0;
-<<<<<<< HEAD
 
         #DB initialisation
         self.db = MySQLdb.connect(
@@ -54,18 +49,6 @@ class rangefinder(object):
                                 level=logging.DEBUG)
             print "Logging data to file %s." % (logname,)
 
-=======
-
-        #Logging initialisation:
-        date = "".join(time.strftime("%x").split("/"))
-        clock = "".join(time.strftime("%X").split(":"))
-        logname = "rangefinderlog_%s_%s.log" % (date, clock)
-        logging.basicConfig(filename = logname, 
-                            format='%(levelname)s:%(message)s', 
-                            level=logging.DEBUG)
-        print "Logging data to file %s. \"Ctrl-c\" to stop" % (logname,)
-
->>>>>>> 1a0db0850b107cc561adc2460424b37ac7a29cbb
         #Open serial port:
         if settings.WINDOWS:
             port = settings.WINPORT
@@ -87,21 +70,12 @@ class rangefinder(object):
                 logging.exception("Error opening serial port for rangefinder:\
                               %s" % (port,))
                 raise
-<<<<<<< HEAD
         if settings.LOG:
             logging.info("Serial initialised to port: %s \n\
 Threshold set to: %s inches\nSample taken every %s seconds\n" % 
                      (port,settings.THRESHOLD,settings.RATE))
         print ("Serial initialised to port: %s \n\
-Threshold set to: %s inches\nSample taken every %s seconds\nPress \"Ctrl-c\" to quit" % 
-=======
-        logging.info("Serial initialised to port: %s \n\
-Threshold set to: %s inches\nSample taken every %s seconds\n" % 
-                     (port,settings.THRESHOLD,settings.RATE))
-        print ("Serial initialised to port: %s \n\
-Threshold set to: %s inches\nSample taken every %s seconds\n" % 
->>>>>>> 1a0db0850b107cc561adc2460424b37ac7a29cbb
-        (port,settings.THRESHOLD,settings.RATE))
+Threshold set to: %s inches\nSample taken every %s seconds\nPress \"Ctrl-c\" to quit" % (port,settings.THRESHOLD,settings.RATE))
 
     def get_message(self, timeout = 10): #timeout in seconds
         self.serial.flushInput()
@@ -122,19 +96,13 @@ Threshold set to: %s inches\nSample taken every %s seconds\n" %
     def record(self):
         #Start recording:
         self.status = 1
-<<<<<<< HEAD
         while self.status:
             try: 
                 self.cur.execute(self.sqlRead, (settings.COLUMN_ID,))
                 dbValue = self.cur.fetchone()
                 received_line = self.get_message()[:-1] #strip \cr
                 temp = received_line.split(" ")
-                try:
-                    distance = int(temp[0][1:])
-                except ValueError:
-                    if not settings.SILENT:
-                        print "Serial error, skipping measurement"
-                    pass
+                distance = int(temp[0][1:])
                 activeValue = int(temp[1][1:])
                 if distance > settings.THRESHOLD:
                     logging.info(received_line)
@@ -142,23 +110,16 @@ Threshold set to: %s inches\nSample taken every %s seconds\n" %
                 if not settings.SILENT:
                     print "activeValue on database: ", (dbValue[0],)
                     print "sensor data: " + received_line + "\n"
-=======
-        start = round(time.time(), 0)
-        while self.status:
-            try: 
-                received_line = self.get_message()[:-1] #strip \cr
-                temp = received_line.split(" ")
-                distance = int(temp[0][1:])
-                if distance > settings.THRESHOLD:
-                    logging.info(received_line)
-                if not settings.SILENT:
-                    print received_line + "\n"
->>>>>>> 1a0db0850b107cc561adc2460424b37ac7a29cbb
+                
                 time.sleep(settings.RATE)
+            except ValueError:
+                if not settings.SILENT:
+                    print "Serial error, skipping measurement"
             except (KeyboardInterrupt, SystemExit):
                 self.cur.close()
                 self.db.close()
                 raise
+
 
 if __name__ == "__main__":
     rangefinder = rangefinder().record()
