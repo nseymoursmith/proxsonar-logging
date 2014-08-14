@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 Python serial interface to USB-ProxSonar
 logs data from the rangefinder to file
@@ -12,32 +10,44 @@ import time
 import logging
 import settings
 
+port = "/dev/tty*USB*" #Should work for Mac/linux if only serial device
+
 class rangefinder(object):
     #default port def should work for linux & mac
-    def __init__(self, port="/dev/tty*USB*"):
+    def __init__(self):
         self.debug = False
         self.status = 0;
+
+        #Logging initialisation:
         date = "".join(time.strftime("%x").split("/"))
         clock = "".join(time.strftime("%X").split(":"))
         logname = "rangefinderlog_%s_%s.log" % (date, clock)
         logging.basicConfig(filename = logname, 
-                            format='%(message)s', 
+                            format='%(levelname)s:%(message)s', 
                             level=logging.DEBUG)
         print "Logging data to file %s. \"Ctrl-c\" to stop" % (logname,)
 
-        #Look for the first port that matches the glob given
-        try:
-            port = glob.glob(port)[0]
-        except IndexError:
-           logging.error("Could not find the serial port for the rangefinder:\
+        #Open serial port:
+        if settings.WINDOWS:
+            port = settings.WINPORT
+            try:
+                self.serial = serial.Serial(port, 57600, timeout=None)
+            except:
+                logging.exception("Error opening serial port %s" % (port,))
+        else:
+            #Look for the first port that matches the glob given
+            try:
+                port = glob.glob(port)[0]
+            except IndexError:
+                logging.error("Could not find the serial port for the rangefinder:\
                          %s" % (port,))
-           raise Exception(port + "does not exist!")
-        try:
-            self.serial = serial.Serial(port, 57600, timeout=None)
-        except:
-            logging.exception("Error opening serial port for rangefinder:\
+                raise Exception(port + " does not exist!")
+            try:
+                self.serial = serial.Serial(port, 57600, timeout=None)
+            except:
+                logging.exception("Error opening serial port for rangefinder:\
                               %s" % (port,))
-            raise
+                raise
         logging.info("Serial initialised to port: %s \n\
                       Threshold set to: %s inches" % (port,settings.THRESHOLD))
         print "Serial initialised to port: %s \n\
