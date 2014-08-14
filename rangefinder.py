@@ -49,9 +49,11 @@ class rangefinder(object):
                               %s" % (port,))
                 raise
         logging.info("Serial initialised to port: %s \n\
-                      Threshold set to: %s inches" % (port,settings.THRESHOLD))
-        print "Serial initialised to port: %s \n\
-               Threshold set to: %s inches" % (port,settings.THRESHOLD)
+Threshold set to: %s inches\nSample taken every %s seconds\n" % 
+                     (port,settings.THRESHOLD,settings.RATE))
+        print ("Serial initialised to port: %s \n\
+Threshold set to: %s inches\nSample taken every %s seconds\n" % 
+        (port,settings.THRESHOLD,settings.RATE))
 
     def get_message(self, timeout = 10): #timeout in seconds
         self.serial.flushInput()
