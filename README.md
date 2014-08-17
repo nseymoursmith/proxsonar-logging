@@ -1,16 +1,19 @@
 USAGE:
+=====
 
-From the command line: 
+In windows or linux, from the command line: 
 
 > python rangefinder.py
 
-On mac, double click "rangefinder_logging.command".
+On mac, just double click "rangefinder_logging.command".
 
-To quit, press "Ctrl-c" in the terminal
+To quit, press "Ctrl-c" in the terminal window 
 
 REQUIREMENTS:
+============
 
 Python2.7: 
+=========
 
 Windows: https://www.python.org/download/releases/2.7/
 
@@ -29,6 +32,7 @@ Mac (if Python is not already installed):
      then `source ~/.bash_profile`
 
 pySerial: 
+========
 
 Windows: http://www.askives.com/pyserial-64-bit-windows.html
 
@@ -36,8 +40,10 @@ Mac:
 > pip install pyserial
 
 MySQLdb: 
+=======
 
 Windows: http://www.codegood.com/archives/129
 
+Mac:
 > pip install MySQLdb-python
 
