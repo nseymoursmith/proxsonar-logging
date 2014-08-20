@@ -111,6 +111,7 @@ Threshold set to: %s inches\nSample taken every %s seconds\nPress \"Ctrl-c\" to 
                     activeValue = 1
                 logging.info(received_line)
                 self.cur.execute(self.sqlUpdate, (activeValue, settings.COLUMN_ID))
+                self.db.commit()
                 if not settings.SILENT:
                     print "\nsensor data: " + received_line 
                     print "Max distance: %s in." % (settings.DMAX,)
