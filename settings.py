@@ -8,23 +8,12 @@ SILENT = 0 #If set, readings will not be printed to terminal
 
 LOG = 0 #If set, readings will be written to logfile
 
-PORT = "/dev/tty*USB*" #Regex used to identify serial port in Mac/linux
-                       #You can replace this with specific name if you
-                       #have multiple serial devices
+PORT = "/dev/tty*USB*" #!!! If this doesn't work first time then
+                       #change it to the exact name of your device
 
 WINDOWS = True #Set to "False" if in Mac/Linux
 
 WINPORT = "COM1" #Serial port of the rangefinder in windows
 
-
-#DATABASE VARIABLES:
-
-DATABASE = "test" 
-
-HOST = "localhost"
-
-USER = "root"
-
-PASS = "root"
-
-COLUMN_ID = 2 
+OUTPUT_FILE = "C:\\Users\\Nic\\Documents\\proxsonar-logging\\output.txt"
+#INSERT YOUR DESTINATION OF CHOICE ABOVE
