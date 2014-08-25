@@ -47,11 +47,3 @@ Windows: http://www.askives.com/pyserial-64-bit-windows.html
 Mac: 
 > pip install pyserial
 
-MySQLdb: 
---------
-
-Windows: http://www.codegood.com/archives/129
-
-Mac:
-> pip install MySQLdb-python
-
